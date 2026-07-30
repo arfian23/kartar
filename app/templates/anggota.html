@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block title %}
+Data Anggota
+{% endblock %}
+
+{% block content %}
+
+<div class="fade-in">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="page-title mb-1">
+                Data Anggota
+            </h2>
+
+            <p class="text-muted mb-0">
+                Kelola seluruh data anggota Karang Taruna.
+            </p>
+
+        </div>
+
+        {% if user.role in ["ketua", "wakil"] %}
+            <button
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#modalTambah">
+                <i class="bi bi-plus-circle me-2"></i>
+                
+                Tambah Anggota
+            </button>
+            {% endif %}
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+
+                <div class="col-md-4">
+
+                    <input
+                        type="text"
+                        id="searchAnggota"
+                        class="form-control"
+                        placeholder="Cari nama anggota...">
+
+                </div>
+
+                <div class="col-md-8 text-end">
+
+                    <span class="badge bg-primary">
+
+                        Total Data :
+                        {{ anggota_list|length }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th width="70">No</th>
+                            <th>Nama</th>
+                            <th>RT</th>
+                            <th>No HP</th>
+                            <th>Status</th>
+                            {% if user.role in ["ketua", "wakil"] %}
+                                <th width="180">Aksi</th>
+                            {% endif %}
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="tbodyAnggota">
+
+                        {% for anggota in anggota_list %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+
+                                <strong>
+
+                                    {{ anggota.nama }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                {{ anggota.rt }}
+
+                            </td>
+
+                            <td>
+
+                                {{ anggota.no_hp }}
+
+                            </td>
+
+                            <td>
+
+                                {% if anggota.status == "Aktif" %}
+
+                                <span class="badge bg-success">
+
+                                    Aktif
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    Tidak Aktif
+
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            {% if user.role in ["ketua", "wakil"] %}
+                                <td>
+
+                                    <button
+                                        class="btn btn-warning btn-sm"
+                                        onclick="editAnggota({{ anggota.id }})">
+
+                                        <i class="bi bi-pencil-square"></i>
+
+                                    </button>
+
+                                    <button
+                                        class="btn btn-danger btn-sm"
+                                        onclick="hapusAnggota({{ anggota.id }})">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </button>
+
+                                </td>
+                            {% endif %}
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% if user.role in ["ketua", "wakil"] %}
+
+    <!-- Modal -->
+
+    <div class="modal fade" id="modalTambah" tabindex="-1">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        Tambah Anggota
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+
+                        <label>Nama</label>
+
+                        <input
+                            id="nama"
+                            class="form-control">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>RT</label>
+
+                        <input
+                            id="rt"
+                            class="form-control">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>No HP</label>
+
+                        <input
+                            id="no_hp"
+                            class="form-control">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Alamat</label>
+
+                        <input
+                            id="alamat"
+                            class="form-control">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Status</label>
+
+                        <select
+                            id="status"
+                            class="form-select">
+
+                            <option>Aktif</option>
+                            <option>Tidak Aktif</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Batal
+
+                    </button>
+
+                    <button
+                        class="btn btn-success"
+                        onclick="simpanAnggota()">
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        Simpan
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block script %}
+
+<script src="/static/js/anggota.js"></script>
+
+<script>
+
+document.getElementById("searchAnggota").addEventListener("keyup", function () {
+
+    const keyword = this.value.toLowerCase();
+
+    const rows = document.querySelectorAll("#tbodyAnggota tr");
+
+    rows.forEach(function(row){
+
+        row.style.display =
+            row.innerText.toLowerCase().includes(keyword)
+            ? ""
+            : "none";
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

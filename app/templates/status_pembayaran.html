@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block title %}Status Pembayaran{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Status Pembayaran</h3>
+
+        <button
+            class="btn btn-primary"
+            onclick="resetFormPembayaran()"
+            data-bs-toggle="modal"
+            data-bs-target="#modalPembayaran">
+            <i class="bi bi-plus-circle"></i> Tambah Pembayaran
+        </button>
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+
+                <div class="col-md-4">
+                    <input
+                        type="text"
+                        id="searchPembayaran"
+                        class="form-control"
+                        placeholder="Cari Nama Anggota...">
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                    <tr>
+
+                        <th>No</th>
+
+                        <th>Nama</th>
+
+                        <th>Bulan</th>
+
+                        <th>Tahun</th>
+
+                        <th>Nominal</th>
+
+                        <th>Tanggal Bayar</th>
+
+                        <th>Status</th>
+
+                        <th>Keterangan</th>
+
+                        <th width="150">Aksi</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="tablePembayaran">
+
+                    {% for item in pembayaran_list %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>{{ item.anggota.nama }}</td>
+
+                        <td>{{ item.bulan }}</td>
+
+                        <td>{{ item.tahun }}</td>
+
+                        <td>
+                            Rp {{ "{:,.0f}".format(item.nominal).replace(",", ".") }}
+                        </td>
+
+                        <td>{{ item.tanggal_bayar }}</td>
+
+                        <td>
+
+                            {% if item.status=="Lunas" %}
+
+                            <span class="badge bg-success">
+                                Lunas
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge bg-danger">
+                                Belum Lunas
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>{{ item.keterangan or "-" }}</td>
+
+                        <td>
+
+                            <button
+                                class="btn btn-warning btn-sm"
+                                onclick="editPembayaran({{ item.id }})">
+
+                                Edit
+
+                            </button>
+
+                            <button
+                                class="btn btn-danger btn-sm"
+                                onclick="hapusPembayaran({{ item.id }})">
+
+                                Hapus
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+
+<div
+class="modal fade"
+id="modalPembayaran"
+tabindex="-1">
+
+<div class="modal-dialog modal-lg">
+
+<div class="modal-content">
+
+<form id="formPembayaran">
+
+<div class="modal-header">
+
+<h5 id="modalTitle">
+
+Tambah Pembayaran
+
+</h5>
+
+<button
+class="btn-close"
+data-bs-dismiss="modal">
+
+</button>
+
+</div>
+
+<div class="modal-body">
+
+<input
+type="hidden"
+id="id">
+
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label>Anggota</label>
+
+<select
+id="anggota_id"
+class="form-select"
+required>
+
+<option value="">Pilih Anggota</option>
+
+{% for anggota in anggota_list %}
+
+<option value="{{ anggota.id }}">
+{{ anggota.nama }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>Bulan</label>
+
+<select
+id="bulan"
+class="form-select"
+required>
+
+<option>Januari</option>
+<option>Februari</option>
+<option>Maret</option>
+<option>April</option>
+<option>Mei</option>
+<option>Juni</option>
+<option>Juli</option>
+<option>Agustus</option>
+<option>September</option>
+<option>Oktober</option>
+<option>November</option>
+<option>Desember</option>
+
+</select>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>Tahun</label>
+
+<input
+type="number"
+id="tahun"
+class="form-control"
+value="2026"
+required>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>Nominal</label>
+
+<input
+type="number"
+id="nominal"
+class="form-control"
+required>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>Tanggal Bayar</label>
+
+<input
+type="date"
+id="tanggal_bayar"
+class="form-control"
+required>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>Status</label>
+
+<select
+id="status"
+class="form-select">
+
+<option>Lunas</option>
+
+<option>Belum Lunas</option>
+
+</select>
+
+</div>
+
+<div class="col-md-12">
+
+<label>Keterangan</label>
+
+<textarea
+id="keterangan"
+class="form-control"
+rows="3"></textarea>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+class="btn btn-secondary"
+data-bs-dismiss="modal">
+
+Batal
+
+</button>
+
+<button
+type="submit"
+class="btn btn-primary">
+
+Simpan
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="/static/js/status_pembayaran.js"></script>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+/* ==========================================================
+   Layout Styles - Karang Taruna Sendangan
+   ========================================================== */
+
+body {
+    overflow-x: hidden;
+    background: #f4f6f9;
+}
+
+/* ---------- Navbar ---------- */
+.top-navbar {
+    height: 60px;
+    background: #0d6efd;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .15);
+}
+
+.toggle-btn {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.navbar-title {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 250px;
+    height: calc(100vh - 60px);
+    background: #212529;
+    transition: .3s;
+    overflow-y: auto;
+    z-index: 1040;
+}
+
+.sidebar.hide {
+    margin-left: -250px;
+}
+
+.sidebar-header {
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.sidebar a {
+    display: block;
+    color: #ced4da;
+    text-decoration: none;
+    padding: 14px 22px;
+    transition: .2s;
+    font-size: 15px;
+}
+
+.sidebar a:hover {
+    background: #0d6efd;
+    color: white;
+}
+
+.sidebar a.active {
+    background: #0d6efd;
+    color: white;
+}
+
+/* ---------- Content ---------- */
+.content {
+    margin-top: 60px;
+    margin-left: 250px;
+    padding: 30px;
+    transition: .3s;
+}
+
+.content.full {
+    margin-left: 0;
+}
+
+/* ---------- Responsive (Mobile) ---------- */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px;
+    }
+
+    .sidebar.show {
+        margin-left: 0;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+}

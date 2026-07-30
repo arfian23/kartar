@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+
+{% block title %}
+Manajemen User
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h3 class="mb-1">
+                Manajemen User
+            </h3>
+
+            <small class="text-muted">
+                Kelola akun pengguna sistem
+            </small>
+        </div>
+
+        <button
+            class="btn btn-primary"
+            id="btnTambahUser">
+
+            <i class="bi bi-plus-circle me-2"></i>
+
+            Tambah User
+
+        </button>
+
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle" id="tableUser">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th width="60">No</th>
+
+                            <th>Nama Lengkap</th>
+
+                            <th>Username</th>
+
+                            <th>Role</th>
+
+                            <th>Status</th>
+
+                            <th width="170">Aksi</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in user_list %}
+
+                        <tr>
+
+                            <td>
+                                {{ loop.index }}
+                            </td>
+
+                            <td>
+                                {{ item.nama_lengkap }}
+                            </td>
+
+                            <td>
+                                {{ item.username }}
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-primary">
+
+                                    {{ item.role }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                {% if item.status %}
+
+                                <span class="badge bg-success">
+
+                                    Aktif
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    Nonaktif
+
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="btn btn-warning btn-sm btn-edit"
+                                    data-id="{{ item.id }}">
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                </button>
+
+                                <button
+                                    class="btn btn-danger btn-sm btn-delete"
+                                    data-id="{{ item.id }}">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div
+    class="modal fade"
+    id="modalUser"
+    tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title"
+                    id="modalTitle">
+
+                    Tambah User
+
+                </h5>
+
+                <button
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form id="formUser">
+
+                    <input
+                        type="hidden"
+                        id="userId">
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Nama Lengkap
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="nama_lengkap"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Username
+
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="username"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Password
+
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="password">
+
+                            <small class="text-muted">
+
+                                Kosongkan saat edit jika password tidak diubah.
+
+                            </small>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Role
+
+                            </label>
+
+                            <select
+                                id="role"
+                                class="form-select">
+
+                                <option value="ketua">Ketua</option>
+
+                                <option value="wakil">Wakil</option>
+
+                                <option value="bendahara">Bendahara</option>
+
+                                <option value="anggota">Anggota</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Anggota
+
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="anggota_id">
+
+                                <option value="">
+
+                                    -- Pilih Anggota --
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Status
+
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="status">
+
+                                <option value="true">
+
+                                    Aktif
+
+                                </option>
+
+                                <option value="false">
+
+                                    Nonaktif
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Batal
+
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    id="btnSimpan">
+
+                    Simpan
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<link rel="stylesheet" href="/static/css/users.css">
+
+<script src="/static/js/users.js"></script>
+
+{% endblock %}

@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block title %}
+Kas Keluar
+{% endblock %}
+
+{% block content %}
+
+<div class="fade-in">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="page-title mb-1">
+                Data Kas Keluar
+            </h2>
+
+            <p class="text-muted mb-0">
+                Kelola seluruh transaksi kas keluar Karang Taruna.
+            </p>
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#modalKasKeluar">
+
+            <i class="bi bi-plus-circle me-2"></i>
+
+            Tambah Kas Keluar
+
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+
+                <div class="col-md-4">
+
+                    <input
+                        type="text"
+                        id="searchKasKeluar"
+                        class="form-control"
+                        placeholder="Cari transaksi...">
+
+                </div>
+
+                <div class="col-md-8 text-end">
+
+                    <span class="badge bg-primary">
+
+                        Total Transaksi :
+                        {{ kas_keluar_list|length }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Kategori</th>
+                            <th>Keperluan</th>
+                            <th>Nominal</th>
+                            <th>Keterangan</th>
+                            <th width="160">Aksi</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="tbodyKasKeluar">
+
+                    {% for kas in kas_keluar_list %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>{{ kas.tanggal }}</td>
+
+                            <td>
+
+                                <span class="badge bg-secondary">
+
+                                    {{ kas.kategori }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <strong>
+
+                                    {{ kas.keperluan }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <span class="fw-bold text-danger">
+
+                                    Rp {{ "{:,.0f}".format(kas.nominal).replace(",", ".") }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                {{ kas.keterangan }}
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="btn btn-warning btn-sm"
+                                    onclick="editKasKeluar({{ kas.id }})">
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                </button>
+
+                                <button
+                                    class="btn btn-danger btn-sm"
+                                    onclick="hapusKasKeluar({{ kas.id }})">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal -->
+
+<div
+    class="modal fade"
+    id="modalKasKeluar"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    Tambah Kas Keluar
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input
+                    type="hidden"
+                    id="kas_id">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Tanggal</label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="tanggal">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Kategori</label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="kategori"
+                            placeholder="Contoh : Konsumsi">
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Keperluan</label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="keperluan"
+                            placeholder="Contoh : Rapat Bulanan">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Nominal</label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="nominal">
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Keterangan</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="keterangan">
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Batal
+
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="simpanKasKeluar()">
+
+                    <i class="bi bi-check-circle me-2"></i>
+
+                    Simpan
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script src="/static/js/kas_keluar.js"></script>
+
+<script>
+
+document.getElementById("searchKasKeluar").addEventListener("keyup", function(){
+
+    const keyword = this.value.toLowerCase();
+
+    const rows = document.querySelectorAll("#tbodyKasKeluar tr");
+
+    rows.forEach(function(row){
+
+        row.style.display =
+            row.innerText.toLowerCase().includes(keyword)
+            ? ""
+            : "none";
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,280 @@
+/* ==========================================================
+   Global Component Style
+   Karang Taruna Sendangan
+   ========================================================== */
+
+/* ===============================
+   Global
+================================== */
+
+body{
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color:#343a40;
+}
+
+/* ===============================
+   Page Title
+================================== */
+
+.page-title{
+    font-size:28px;
+    font-weight:700;
+    color:#212529;
+    margin-bottom:25px;
+}
+
+/* ===============================
+   Card
+================================== */
+
+.card{
+    border:none;
+    border-radius:16px;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    transition:all .25s ease;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 20px rgba(0,0,0,.12);
+}
+
+.card-header{
+    border:none;
+    background:white;
+    font-weight:600;
+    padding:18px 22px;
+}
+
+.card-body{
+    padding:22px;
+}
+
+/* ===============================
+   Dashboard Card
+================================== */
+
+.dashboard-card{
+    border-radius:18px;
+    color:white;
+    padding:22px;
+}
+
+.dashboard-card h6{
+    font-size:15px;
+    opacity:.9;
+    margin-bottom:12px;
+}
+
+.dashboard-card h2{
+    font-size:34px;
+    font-weight:bold;
+    margin:0;
+}
+
+.dashboard-card i{
+    font-size:42px;
+    opacity:.25;
+}
+
+.bg-primary-soft{
+    background:linear-gradient(135deg,#0d6efd,#4a90ff);
+}
+
+.bg-success-soft{
+    background:linear-gradient(135deg,#198754,#37b86c);
+}
+
+.bg-danger-soft{
+    background:linear-gradient(135deg,#dc3545,#ff6b81);
+}
+
+.bg-warning-soft{
+    background:linear-gradient(135deg,#fd7e14,#ffb347);
+}
+
+/* ===============================
+   Button
+================================== */
+
+.btn{
+    border-radius:10px;
+    font-weight:500;
+    transition:.2s;
+}
+
+.btn-primary{
+    box-shadow:0 3px 8px rgba(13,110,253,.25);
+}
+
+.btn-success{
+    box-shadow:0 3px 8px rgba(25,135,84,.25);
+}
+
+.btn-danger{
+    box-shadow:0 3px 8px rgba(220,53,69,.25);
+}
+
+.btn-warning{
+    box-shadow:0 3px 8px rgba(255,193,7,.25);
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+/* ===============================
+   Table
+================================== */
+
+.table{
+    margin-bottom:0;
+    vertical-align:middle;
+}
+
+.table thead{
+    background:#0d6efd;
+    color:white;
+}
+
+.table thead th{
+    border:none;
+    font-weight:600;
+}
+
+.table tbody tr{
+    transition:.2s;
+}
+
+.table tbody tr:hover{
+    background:#f8f9fa;
+}
+
+.table-responsive{
+    border-radius:14px;
+    overflow:hidden;
+}
+
+/* ===============================
+   Form
+================================== */
+
+.form-control,
+.form-select{
+
+    border-radius:10px;
+    border:1px solid #dee2e6;
+    transition:.2s;
+
+}
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#0d6efd;
+    box-shadow:0 0 0 .15rem rgba(13,110,253,.20);
+
+}
+
+label{
+
+    font-weight:600;
+
+}
+
+/* ===============================
+   Modal
+================================== */
+
+.modal-content{
+
+    border:none;
+    border-radius:18px;
+
+}
+
+.modal-header{
+
+    border-bottom:none;
+
+}
+
+.modal-footer{
+
+    border-top:none;
+
+}
+
+/* ===============================
+   Badge
+================================== */
+
+.badge{
+
+    border-radius:20px;
+    padding:8px 12px;
+    font-weight:500;
+
+}
+
+/* ===============================
+   Alert
+================================== */
+
+.alert{
+
+    border:none;
+    border-radius:12px;
+
+}
+
+/* ===============================
+   Utility
+================================== */
+
+.shadow-soft{
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+}
+
+.rounded-xl{
+
+    border-radius:18px;
+
+}
+
+.cursor-pointer{
+
+    cursor:pointer;
+
+}
+
+/* ===============================
+   Animation
+================================== */
+
+.fade-in{
+
+    animation:fadeIn .4s ease;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}

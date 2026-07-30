@@ -1,0 +1,20 @@
+.table td,
+.table th{
+    vertical-align: middle;
+}
+
+.badge{
+    font-size: .85rem;
+}
+
+.modal-title{
+    font-weight:600;
+}
+
+.btn-sm{
+    min-width:38px;
+}
+
+.card{
+    border-radius:12px;
+}
