@@ -1,0 +1,895 @@
+{% extends "base.html" %}
+
+{% block title %}
+Laporan Keuangan
+{% endblock %}
+
+
+{% block content %}
+
+<div class="fade-in">
+
+    <!-- ====================================================== -->
+    <!-- HEADER -->
+    <!-- ====================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+        <div>
+
+            <h2 class="page-title mb-1">
+                Laporan Keuangan
+            </h2>
+
+            <p class="text-muted mb-0">
+                Ringkasan kas masuk dan kas keluar Karang Taruna.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- FILTER PERIODE -->
+    <!-- ====================================================== -->
+
+    <div class="card mb-4">
+
+        <div class="card-body">
+
+            <form
+                method="GET"
+                action="/laporan"
+                class="row g-3 align-items-end">
+
+
+                <!-- BULAN -->
+
+                <div class="col-12 col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        Bulan
+                    </label>
+
+                    <select
+                        name="bulan"
+                        class="form-select">
+
+                        {% for i in range(1, 13) %}
+
+                        <option
+                            value="{{ i }}"
+                            {% if i == bulan %}selected{% endif %}>
+
+                            {{ nama_bulan[i] }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- TAHUN -->
+
+                <div class="col-12 col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        Tahun
+                    </label>
+
+                    <select
+                        name="tahun"
+                        class="form-select">
+
+                        {% for item_tahun in daftar_tahun %}
+
+                        <option
+                            value="{{ item_tahun }}"
+                            {% if item_tahun == tahun %}selected{% endif %}>
+
+                            {{ item_tahun }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- TOMBOL TAMPILKAN -->
+
+                <div class="col-12 col-md-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100">
+
+                        <i class="bi bi-funnel me-1"></i>
+
+                        Tampilkan
+
+                    </button>
+
+                </div>
+
+
+                <!-- TOMBOL DOWNLOAD EXCEL -->
+
+                <div class="col-12 col-md-2">
+
+                    <a
+                        href="/laporan/excel?bulan={{ bulan }}&tahun={{ tahun }}"
+                        class="btn btn-success w-100">
+
+                        <i class="bi bi-file-earmark-excel me-1"></i>
+
+                        Excel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- INFORMASI PERIODE -->
+    <!-- ====================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+
+        <div>
+
+            <h5 class="fw-bold mb-1">
+
+                Periode {{ bulan_terpilih }} {{ tahun }}
+
+            </h5>
+
+            <small class="text-muted">
+
+                Ringkasan transaksi pada periode yang dipilih.
+
+            </small>
+
+        </div>
+
+
+        <!-- DOWNLOAD EXCEL -->
+
+        <a
+            href="/laporan/excel?bulan={{ bulan }}&tahun={{ tahun }}"
+            class="btn btn-outline-success">
+
+            <i class="bi bi-download me-2"></i>
+
+            Download Excel
+
+        </a>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- CARD RINGKASAN PERIODE -->
+    <!-- ====================================================== -->
+
+    <div class="row g-3 mb-4">
+
+
+        <!-- KAS MASUK -->
+
+        <div class="col-12 col-md-4">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div>
+
+                            <p class="text-muted mb-2">
+                                Kas Masuk Periode
+                            </p>
+
+                            <h4 class="fw-bold text-success mb-0">
+
+                                Rp {{ "{:,.0f}".format(total_masuk_periode).replace(",", ".") }}
+
+                            </h4>
+
+                        </div>
+
+
+                        <div class="fs-3 text-success">
+
+                            <i class="bi bi-arrow-down-circle"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- KAS KELUAR -->
+
+        <div class="col-12 col-md-4">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div>
+
+                            <p class="text-muted mb-2">
+                                Kas Keluar Periode
+                            </p>
+
+                            <h4 class="fw-bold text-danger mb-0">
+
+                                Rp {{ "{:,.0f}".format(total_keluar_periode).replace(",", ".") }}
+
+                            </h4>
+
+                        </div>
+
+
+                        <div class="fs-3 text-danger">
+
+                            <i class="bi bi-arrow-up-circle"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SELISIH PERIODE -->
+
+        <div class="col-12 col-md-4">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div>
+
+                            <p class="text-muted mb-2">
+                                Selisih Periode
+                            </p>
+
+
+                            {% if selisih_periode >= 0 %}
+
+                            <h4 class="fw-bold text-primary mb-0">
+
+                                Rp {{ "{:,.0f}".format(selisih_periode).replace(",", ".") }}
+
+                            </h4>
+
+                            {% else %}
+
+                            <h4 class="fw-bold text-danger mb-0">
+
+                                - Rp {{ "{:,.0f}".format(selisih_periode|abs).replace(",", ".") }}
+
+                            </h4>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="fs-3 text-primary">
+
+                            <i class="bi bi-calculator"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- SALDO KESELURUHAN -->
+    <!-- ====================================================== -->
+
+    <div class="card mb-4">
+
+        <div class="card-body">
+
+            <div class="row align-items-center">
+
+
+                <!-- SALDO -->
+
+                <div class="col-md-8">
+
+                    <p class="text-muted mb-1">
+                        Saldo Kas Keseluruhan
+                    </p>
+
+
+                    {% if saldo_kas >= 0 %}
+
+                    <h2 class="fw-bold text-primary mb-1">
+
+                        Rp {{ "{:,.0f}".format(saldo_kas).replace(",", ".") }}
+
+                    </h2>
+
+                    {% else %}
+
+                    <h2 class="fw-bold text-danger mb-1">
+
+                        - Rp {{ "{:,.0f}".format(saldo_kas|abs).replace(",", ".") }}
+
+                    </h2>
+
+                    {% endif %}
+
+
+                    <small class="text-muted">
+
+                        Total seluruh kas masuk dikurangi seluruh kas keluar.
+
+                    </small>
+
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div class="col-md-4 mt-3 mt-md-0">
+
+                    <div class="row">
+
+
+                        <!-- TOTAL MASUK -->
+
+                        <div class="col-6">
+
+                            <small class="text-muted d-block">
+                                Total Masuk
+                            </small>
+
+                            <strong class="text-success">
+
+                                Rp {{ "{:,.0f}".format(total_masuk_semua).replace(",", ".") }}
+
+                            </strong>
+
+                        </div>
+
+
+                        <!-- TOTAL KELUAR -->
+
+                        <div class="col-6">
+
+                            <small class="text-muted d-block">
+                                Total Keluar
+                            </small>
+
+                            <strong class="text-danger">
+
+                                Rp {{ "{:,.0f}".format(total_keluar_semua).replace(",", ".") }}
+
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- TABEL KAS MASUK -->
+    <!-- ====================================================== -->
+
+    <div class="card mb-4">
+
+        <div class="card-header bg-white">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h5 class="mb-0 fw-bold">
+                        Kas Masuk
+                    </h5>
+
+                    <small class="text-muted">
+
+                        {{ bulan_terpilih }} {{ tahun }}
+
+                    </small>
+
+                </div>
+
+
+                <span class="badge bg-success">
+
+                    {{ kas_masuk_list|length }} Transaksi
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>No</th>
+
+                            <th>Tanggal</th>
+
+                            <th>Nama Anggota</th>
+
+                            <th>RT</th>
+
+                            <th>Nominal</th>
+
+                            <th>Metode</th>
+
+                            <th>Keterangan</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for kas in kas_masuk_list %}
+
+                        <tr>
+
+
+                            <!-- NOMOR -->
+
+                            <td>
+
+                                {{ loop.index }}
+
+                            </td>
+
+
+                            <!-- TANGGAL -->
+
+                            <td>
+
+                                {{ kas.tanggal.strftime("%d-%m-%Y") }}
+
+                            </td>
+
+
+                            <!-- NAMA ANGGOTA -->
+
+                            <td>
+
+                                {% if kas.anggota %}
+
+                                <strong>
+
+                                    {{ kas.anggota.nama }}
+
+                                </strong>
+
+                                {% else %}
+
+                                -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- RT -->
+
+                            <td>
+
+                                {% if kas.anggota %}
+
+                                RT {{ kas.anggota.rt }}
+
+                                {% else %}
+
+                                -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- NOMINAL -->
+
+                            <td>
+
+                                <strong class="text-success">
+
+                                    Rp {{ "{:,.0f}".format(kas.nominal).replace(",", ".") }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <!-- METODE -->
+
+                            <td>
+
+
+                                {% if kas.metode == "Cash" %}
+
+                                <span class="badge bg-success">
+
+                                    Cash
+
+                                </span>
+
+
+                                {% elif kas.metode == "Transfer" %}
+
+                                <span class="badge bg-primary">
+
+                                    Transfer
+
+                                </span>
+
+
+                                {% elif kas.metode == "QRIS" %}
+
+                                <span class="badge bg-warning text-dark">
+
+                                    QRIS
+
+                                </span>
+
+
+                                {% else %}
+
+                                <span class="badge bg-secondary">
+
+                                    {{ kas.metode }}
+
+                                </span>
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                            <!-- KETERANGAN -->
+
+                            <td>
+
+                                {{ kas.keterangan or "-" }}
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% else %}
+
+
+                        <!-- JIKA KOSONG -->
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="text-center text-muted py-4">
+
+                                <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+
+                                Belum ada kas masuk pada
+                                {{ bulan_terpilih }} {{ tahun }}.
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- TABEL KAS KELUAR -->
+    <!-- ====================================================== -->
+
+    <div class="card mb-4">
+
+        <div class="card-header bg-white">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h5 class="mb-0 fw-bold">
+
+                        Kas Keluar
+
+                    </h5>
+
+                    <small class="text-muted">
+
+                        {{ bulan_terpilih }} {{ tahun }}
+
+                    </small>
+
+                </div>
+
+
+                <span class="badge bg-danger">
+
+                    {{ kas_keluar_list|length }} Transaksi
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>No</th>
+
+                            <th>Tanggal</th>
+
+                            <th>Kategori</th>
+
+                            <th>Keperluan</th>
+
+                            <th>Nominal</th>
+
+                            <th>Keterangan</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for kas in kas_keluar_list %}
+
+                        <tr>
+
+
+                            <!-- NOMOR -->
+
+                            <td>
+
+                                {{ loop.index }}
+
+                            </td>
+
+
+                            <!-- TANGGAL -->
+
+                            <td>
+
+                                {{ kas.tanggal.strftime("%d-%m-%Y") }}
+
+                            </td>
+
+
+                            <!-- KATEGORI -->
+
+                            <td>
+
+                                <span class="badge bg-secondary">
+
+                                    {{ kas.kategori }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- KEPERLUAN -->
+
+                            <td>
+
+                                <strong>
+
+                                    {{ kas.keperluan }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <!-- NOMINAL -->
+
+                            <td>
+
+                                <strong class="text-danger">
+
+                                    Rp {{ "{:,.0f}".format(kas.nominal).replace(",", ".") }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <!-- KETERANGAN -->
+
+                            <td>
+
+                                {{ kas.keterangan or "-" }}
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% else %}
+
+
+                        <!-- JIKA KOSONG -->
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="text-center text-muted py-4">
+
+                                <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+
+                                Belum ada kas keluar pada
+                                {{ bulan_terpilih }} {{ tahun }}.
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- INFORMASI LAPORAN -->
+    <!-- ====================================================== -->
+
+    <div class="card mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex align-items-start">
+
+
+                <div class="me-3">
+
+                    <i class="bi bi-info-circle fs-4 text-primary"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">
+
+                        Informasi Laporan
+
+                    </h6>
+
+
+                    <p class="text-muted mb-0">
+
+                        Laporan periode hanya menampilkan transaksi
+                        kas masuk dan kas keluar pada
+
+                        <strong>
+
+                            {{ bulan_terpilih }} {{ tahun }}
+
+                        </strong>.
+
+                        Saldo kas keseluruhan dihitung dari seluruh
+                        kas masuk dikurangi seluruh kas keluar.
+
+                        Laporan periode ini juga dapat diunduh
+                        dalam format Microsoft Excel.
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

@@ -74,17 +74,21 @@
         <i class="bi bi-calendar-event me-2"></i>
         Agenda
     </a>
+    
+    {% if user.role in ["ketua", "wakil", "bendahara"] %}
+        <a href="/status_pembayaran"
+            class="{% if '/status_pembayaran' in request.url.path %}active{% endif %}">
+            <i class="bi bi-check2-square me-2"></i>
+            Status Pembayaran
+        </a>
+        
+        <a href="/laporan"
+            class="{% if '/laporan' in request.url.path %}active{% endif %}">
+            <i class="bi bi-bar-chart-fill me-2"></i>
+            Laporan
+        </a>
 
-    <a href="/status_pembayaran"
-        class="{% if '/status_pembayaran' in request.url.path %}active{% endif %}">
-        <i class="bi bi-check2-square me-2"></i>
-        Status Pembayaran
-    </a>
-
-    <a href="#">
-        <i class="bi bi-bar-chart-fill me-2"></i>
-        Laporan
-    </a>
+    {% endif %}
 
     <hr class="text-secondary">
 

@@ -8,171 +8,919 @@ Kas Masuk
 
 <div class="fade-in">
 
+    <!-- ====================================================== -->
+    <!-- HEADER HALAMAN -->
+    <!-- ====================================================== -->
+
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
 
         <div>
 
             <h2 class="page-title mb-1">
-                Data Kas Masuk
+                Kas Masuk
             </h2>
 
             <p class="text-muted mb-0">
-                Kelola seluruh transaksi kas masuk Karang Taruna.
+                Kelola pembayaran kas anggota Karang Taruna.
             </p>
 
         </div>
 
         <button
+            type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
             data-bs-target="#modalKasMasuk">
 
             <i class="bi bi-plus-circle me-2"></i>
-
             Tambah Kas Masuk
 
         </button>
 
     </div>
 
+
+    <!-- ====================================================== -->
+    <!-- CARD UTAMA -->
+    <!-- ====================================================== -->
+
     <div class="card">
 
         <div class="card-body">
 
-            <div class="row mb-3">
 
-                <div class="col-md-4">
+            <!-- ================================================== -->
+            <!-- TAB MENU -->
+            <!-- ================================================== -->
 
-                    <input
-                        type="text"
-                        id="searchKasMasuk"
-                        class="form-control"
-                        placeholder="Cari transaksi...">
+            <ul
+                class="nav nav-tabs mb-4"
+                id="kasMasukTab"
+                role="tablist">
 
-                </div>
 
-                <div class="col-md-8 text-md-end mt-2 mt-md-0">
+                <!-- TAB REKAP -->
 
-                    <span class="badge bg-primary">
+                <li
+                    class="nav-item"
+                    role="presentation">
 
-                        Total Transaksi :
-                        {{ kas_masuk_list|length }}
+                    <button
+                        class="nav-link active"
+                        id="rekap-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#rekapPembayaran"
+                        type="button"
+                        role="tab"
+                        aria-controls="rekapPembayaran"
+                        aria-selected="true">
 
-                    </span>
+                        <i class="bi bi-table me-2"></i>
 
-                </div>
+                        Rekap Pembayaran
 
-            </div>
+                    </button>
 
-            <div class="table-responsive">
+                </li>
 
-                <table class="table table-hover align-middle">
 
-                    <thead>
+                <!-- TAB RIWAYAT -->
 
-                        <tr>
+                <li
+                    class="nav-item"
+                    role="presentation">
 
-                            <th>No</th>
-                            <th>Tanggal</th>
-                            <th>Nama Anggota</th>
-                            <th>Bulan</th>
-                            <th>Tahun</th>
-                            <th>Nominal</th>
-                            <th>Metode</th>
-                            <th>Keterangan</th>
-                            <th width="160">Aksi</th>
+                    <button
+                        class="nav-link"
+                        id="riwayat-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#riwayatTransaksi"
+                        type="button"
+                        role="tab"
+                        aria-controls="riwayatTransaksi"
+                        aria-selected="false">
 
-                        </tr>
+                        <i class="bi bi-clock-history me-2"></i>
 
-                    </thead>
+                        Riwayat Transaksi
 
-                    <tbody id="tbodyKasMasuk">
+                    </button>
 
-                    {% for kas in kas_masuk_list %}
+                </li>
 
-                        <tr>
+            </ul>
 
-                            <td>{{ loop.index }}</td>
 
-                            <td>{{ kas.tanggal }}</td>
+            <!-- ================================================== -->
+            <!-- ISI TAB -->
+            <!-- ================================================== -->
 
-                            <td>
-                                <strong>{{ kas.anggota.nama }}</strong>
-                            </td>
+            <div
+                class="tab-content"
+                id="kasMasukTabContent">
 
-                            <td>{{ kas.bulan }}</td>
 
-                            <td>{{ kas.tahun }}</td>
+                <!-- ================================================== -->
+                <!-- TAB REKAP PEMBAYARAN -->
+                <!-- ================================================== -->
 
-                            <td>
+                <div
+                    class="tab-pane fade show active"
+                    id="rekapPembayaran"
+                    role="tabpanel"
+                    aria-labelledby="rekap-tab">
 
-                                <span class="fw-bold text-success">
 
-                                    Rp {{ "{:,.0f}".format(kas.nominal).replace(",", ".") }}
+                    <!-- ============================================== -->
+                    <!-- JUDUL REKAP -->
+                    <!-- ============================================== -->
+
+                    <div class="mb-4">
+
+                        <h5 class="mb-1">
+
+                            <i class="bi bi-calendar-check text-primary me-2"></i>
+
+                            Rekap Pembayaran
+
+                        </h5>
+
+                        <p class="text-muted mb-0">
+
+                            Lihat status pembayaran kas setiap anggota berdasarkan periode.
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- ============================================== -->
+                    <!-- FILTER -->
+                    <!-- ============================================== -->
+
+                    <form
+                        method="GET"
+                        action="/kas_masuk"
+                        class="mb-4">
+
+                        <div class="row g-3 align-items-end">
+
+
+                            <!-- TAHUN -->
+
+                            <div class="col-12 col-md-3">
+
+                                <label class="form-label fw-semibold">
+
+                                    Tahun
+
+                                </label>
+
+                                <select
+                                    class="form-select"
+                                    name="tahun">
+
+                                    {% for item_tahun in daftar_tahun %}
+
+                                    <option
+                                        value="{{ item_tahun }}"
+                                        {% if item_tahun == tahun %}selected{% endif %}>
+
+                                        {{ item_tahun }}
+
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- BULAN AWAL -->
+
+                            <div class="col-12 col-md-3">
+
+                                <label class="form-label fw-semibold">
+
+                                    Bulan Awal
+
+                                </label>
+
+                                <select
+                                    class="form-select"
+                                    name="bulan_awal">
+
+                                    {% for nomor in range(1, 13) %}
+
+                                    <option
+                                        value="{{ nomor }}"
+                                        {% if nomor == bulan_awal %}selected{% endif %}>
+
+                                        {{ nama_bulan[nomor] }}
+
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- BULAN AKHIR -->
+
+                            <div class="col-12 col-md-3">
+
+                                <label class="form-label fw-semibold">
+
+                                    Bulan Akhir
+
+                                </label>
+
+                                <select
+                                    class="form-select"
+                                    name="bulan_akhir">
+
+                                    {% for nomor in range(1, 13) %}
+
+                                    <option
+                                        value="{{ nomor }}"
+                                        {% if nomor == bulan_akhir %}selected{% endif %}>
+
+                                        {{ nama_bulan[nomor] }}
+
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- TOMBOL TAMPILKAN -->
+
+                            <div class="col-12 col-md-3">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary w-100">
+
+                                    <i class="bi bi-funnel me-2"></i>
+
+                                    Tampilkan
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+
+                    <!-- ============================================== -->
+                    <!-- INFORMASI PERIODE -->
+                    <!-- ============================================== -->
+
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+
+                        <div>
+
+                            <span class="text-muted">
+                                Periode:
+                            </span>
+
+                            <strong>
+
+                                {{ nama_bulan[bulan_awal] }}
+                                -
+                                {{ nama_bulan[bulan_akhir] }}
+                                {{ tahun }}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span class="badge bg-success me-1">
+
+                                <i class="bi bi-check-circle-fill me-1"></i>
+
+                                Sudah Bayar
+
+                            </span>
+
+                            <span class="badge bg-danger">
+
+                                <i class="bi bi-x-circle-fill me-1"></i>
+
+                                Belum Bayar
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ============================================== -->
+                    <!-- PENCARIAN ANGGOTA -->
+                    <!-- ============================================== -->
+
+                    <div class="row mb-3">
+
+                        <div class="col-12 col-md-4">
+
+                            <div class="input-group">
+
+                                <span class="input-group-text bg-white">
+
+                                    <i class="bi bi-search"></i>
 
                                 </span>
 
-                            </td>
+                                <input
+                                    type="text"
+                                    id="searchRekap"
+                                    class="form-control"
+                                    placeholder="Cari nama anggota...">
 
-                            <td>
+                            </div>
 
-                                {% if kas.metode == "Cash" %}
+                        </div>
 
-                                    <span class="badge bg-success">
+                    </div>
 
-                                        Cash
 
-                                    </span>
+                    <!-- ============================================== -->
+                    <!-- TABEL REKAP PEMBAYARAN -->
+                    <!-- ============================================== -->
 
-                                {% elif kas.metode == "Transfer" %}
+                    <div class="table-responsive">
 
-                                    <span class="badge bg-primary">
+                        <table
+                            class="table table-bordered table-hover align-middle">
 
-                                        Transfer
 
-                                    </span>
+                            <!-- HEADER -->
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th
+                                        class="text-center"
+                                        style="width: 60px;">
+
+                                        No
+
+                                    </th>
+
+
+                                    <th style="min-width: 230px;">
+
+                                        Nama Anggota
+
+                                    </th>
+
+
+                                    <th
+                                        class="text-center"
+                                        style="min-width: 80px;">
+
+                                        RT
+
+                                    </th>
+
+
+                                    <!-- BULAN DINAMIS -->
+
+                                    {% for item_bulan in daftar_bulan %}
+
+                                    <th
+                                        class="text-center"
+                                        style="min-width: 140px;">
+
+                                        {{ item_bulan.nama }}
+
+                                    </th>
+
+                                    {% endfor %}
+
+                                </tr>
+
+                            </thead>
+
+
+                            <!-- BODY -->
+
+                            <tbody id="tbodyRekap">
+
+
+                                {% for anggota in rekap_pembayaran %}
+
+                                <tr>
+
+
+                                    <!-- NOMOR -->
+
+                                    <td class="text-center">
+
+                                        {{ loop.index }}
+
+                                    </td>
+
+
+                                    <!-- NAMA ANGGOTA -->
+
+                                    <td>
+
+                                        <strong>
+
+                                            {{ anggota.nama }}
+
+                                        </strong>
+
+                                    </td>
+
+
+                                    <!-- RT -->
+
+                                    <td class="text-center">
+
+                                        <span class="badge bg-secondary">
+
+                                            RT {{ anggota.rt }}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- STATUS PEMBAYARAN PER BULAN -->
+
+                                    {% for item_bulan in daftar_bulan %}
+
+
+                                    {% set nominal = anggota.pembayaran[item_bulan.nomor] %}
+
+
+                                    <td class="text-center">
+
+
+                                        {% if nominal >= 3000 %}
+
+
+                                        <!-- SUDAH BAYAR / LUNAS -->
+
+                                        <span class="text-success fw-semibold">
+
+                                            <i class="bi bi-check-circle-fill me-1"></i>
+
+                                            Rp {{ "{:,.0f}".format(nominal).replace(",", ".") }}
+
+                                        </span>
+
+
+                                        {% else %}
+
+
+                                        <!-- BELUM BAYAR -->
+
+                                        <span
+                                            class="text-danger fw-semibold"
+                                            title="{% if nominal > 0 %}Baru membayar Rp {{ nominal }}{% else %}Belum membayar{% endif %}">
+
+                                            <i class="bi bi-x-circle-fill"></i>
+
+                                        </span>
+
+
+                                        {% endif %}
+
+
+                                    </td>
+
+
+                                    {% endfor %}
+
+
+                                </tr>
+
 
                                 {% else %}
 
-                                    <span class="badge bg-warning text-dark">
 
-                                        QRIS
+                                <!-- JIKA TIDAK ADA ANGGOTA -->
 
-                                    </span>
+                                <tr>
 
-                                {% endif %}
+                                    <td
+                                        colspan="{{ 3 + daftar_bulan|length }}"
+                                        class="text-center text-muted py-4">
 
-                            </td>
+                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
 
-                            <td>{{ kas.keterangan }}</td>
+                                        Tidak ada data anggota.
 
-                            <td>
+                                    </td>
 
-                                <button
-                                    class="btn btn-warning btn-sm"
-                                    onclick="editKasMasuk({{ kas.id }})">
+                                </tr>
 
-                                    <i class="bi bi-pencil-square"></i>
 
-                                </button>
+                                {% endfor %}
 
-                                <button
-                                    class="btn btn-danger btn-sm"
-                                    onclick="hapusKasMasuk({{ kas.id }})">
 
-                                    <i class="bi bi-trash"></i>
+                            </tbody>
 
-                                </button>
+                        </table>
 
-                            </td>
+                    </div>
 
-                        </tr>
 
-                    {% endfor %}
+                    <!-- ============================================== -->
+                    <!-- KETERANGAN -->
+                    <!-- ============================================== -->
 
-                    </tbody>
+                    <div class="alert alert-light border mt-3 mb-0">
 
-                </table>
+                        <div class="d-flex align-items-start">
+
+                            <i class="bi bi-info-circle text-primary me-2 mt-1"></i>
+
+                            <small class="text-muted">
+
+                                <span class="text-success fw-semibold">
+
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    Rp
+
+                                </span>
+
+                                berarti pembayaran kas bulan tersebut sudah
+                                mencapai minimal Rp 3.000.
+
+                                <span class="text-danger fw-semibold ms-1">
+
+                                    <i class="bi bi-x-circle-fill"></i>
+
+                                </span>
+
+                                berarti pembayaran belum mencapai Rp 3.000
+                                atau belum ada transaksi.
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ================================================== -->
+                <!-- TAB RIWAYAT TRANSAKSI -->
+                <!-- BAGIAN 2 DIMULAI DARI SINI -->
+                <!-- ================================================== -->
+                 
+                
+                <div
+                    class="tab-pane fade"
+                    id="riwayatTransaksi"
+                    role="tabpanel"
+                    aria-labelledby="riwayat-tab">
+
+
+                    <!-- ============================================== -->
+                    <!-- JUDUL RIWAYAT -->
+                    <!-- ============================================== -->
+
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+
+                        <div>
+
+                            <h5 class="mb-1">
+
+                                <i class="bi bi-clock-history text-primary me-2"></i>
+
+                                Riwayat Transaksi
+
+                            </h5>
+
+                            <p class="text-muted mb-0">
+
+                                Seluruh transaksi kas masuk yang telah dicatat.
+
+                            </p>
+
+                        </div>
+
+
+                        <div>
+
+                            <span class="badge bg-primary">
+
+                                Total Transaksi :
+                                {{ kas_masuk_list|length }}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ============================================== -->
+                    <!-- PENCARIAN RIWAYAT -->
+                    <!-- ============================================== -->
+
+                    <div class="row mb-3">
+
+                        <div class="col-12 col-md-4">
+
+                            <div class="input-group">
+
+                                <span class="input-group-text bg-white">
+
+                                    <i class="bi bi-search"></i>
+
+                                </span>
+
+                                <input
+                                    type="text"
+                                    id="searchRiwayat"
+                                    class="form-control"
+                                    placeholder="Cari transaksi...">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ============================================== -->
+                    <!-- TABEL RIWAYAT TRANSAKSI -->
+                    <!-- ============================================== -->
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>No</th>
+
+                                    <th>Tanggal</th>
+
+                                    <th>Nama Anggota</th>
+
+                                    <th>Bulan</th>
+
+                                    <th>Tahun</th>
+
+                                    <th>Nominal</th>
+
+                                    <th>Metode</th>
+
+                                    <th>Keterangan</th>
+
+                                    <th style="min-width: 100px;">
+                                        Aksi
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="tbodyRiwayat">
+
+
+                                {% for kas in kas_masuk_list %}
+
+                                <tr>
+
+
+                                    <!-- NOMOR -->
+
+                                    <td>
+
+                                        {{ loop.index }}
+
+                                    </td>
+
+
+                                    <!-- TANGGAL -->
+
+                                    <td>
+
+                                        {{ kas.tanggal }}
+
+                                    </td>
+
+
+                                    <!-- NAMA ANGGOTA -->
+
+                                    <td>
+
+                                        {% if kas.anggota %}
+
+                                        <strong>
+
+                                            {{ kas.anggota.nama }}
+
+                                        </strong>
+
+                                        {% else %}
+
+                                        <span class="text-muted">
+
+                                            -
+
+                                        </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- BULAN -->
+
+                                    <td>
+
+                                        {{ kas.bulan }}
+
+                                    </td>
+
+
+                                    <!-- TAHUN -->
+
+                                    <td>
+
+                                        {{ kas.tahun }}
+
+                                    </td>
+
+
+                                    <!-- NOMINAL -->
+
+                                    <td>
+
+                                        <span class="fw-bold text-success">
+
+                                            Rp {{ "{:,.0f}".format(kas.nominal).replace(",", ".") }}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- METODE -->
+
+                                    <td>
+
+
+                                        {% if kas.metode == "Cash" %}
+
+                                        <span class="badge bg-success">
+
+                                            Cash
+
+                                        </span>
+
+
+                                        {% elif kas.metode == "Transfer" %}
+
+                                        <span class="badge bg-primary">
+
+                                            Transfer
+
+                                        </span>
+
+
+                                        {% elif kas.metode == "QRIS" %}
+
+                                        <span class="badge bg-warning text-dark">
+
+                                            QRIS
+
+                                        </span>
+
+
+                                        {% else %}
+
+                                        <span class="badge bg-secondary">
+
+                                            {{ kas.metode }}
+
+                                        </span>
+
+                                        {% endif %}
+
+
+                                    </td>
+
+
+                                    <!-- KETERANGAN -->
+
+                                    <td>
+
+                                        {% if kas.keterangan %}
+
+                                            {{ kas.keterangan }}
+
+                                        {% else %}
+
+                                            <span class="text-muted">
+                                                -
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- AKSI -->
+
+                                    <td>
+
+                                        <div class="d-flex gap-1">
+
+
+                                            <!-- EDIT -->
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-warning btn-sm"
+                                                title="Edit transaksi"
+                                                onclick="editKasMasuk({{ kas.id }})">
+
+                                                <i class="bi bi-pencil-square"></i>
+
+                                            </button>
+
+
+                                            <!-- HAPUS -->
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-danger btn-sm"
+                                                title="Hapus transaksi"
+                                                onclick="hapusKasMasuk({{ kas.id }})">
+
+                                                <i class="bi bi-trash"></i>
+
+                                            </button>
+
+
+                                        </div>
+
+                                    </td>
+
+
+                                </tr>
+
+
+                                {% else %}
+
+
+                                <!-- JIKA BELUM ADA TRANSAKSI -->
+
+                                <tr>
+
+                                    <td
+                                        colspan="9"
+                                        class="text-center text-muted py-4">
+
+                                        <i class="bi bi-receipt fs-3 d-block mb-2"></i>
+
+                                        Belum ada transaksi kas masuk.
+
+                                    </td>
+
+                                </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                </div>
+
 
             </div>
 
@@ -182,7 +930,10 @@ Kas Masuk
 
 </div>
 
-<!-- Modal -->
+
+<!-- ========================================================== -->
+<!-- MODAL TAMBAH / EDIT KAS MASUK -->
+<!-- ========================================================== -->
 
 <div
     class="modal fade"
@@ -194,14 +945,21 @@ Kas Masuk
 
         <div class="modal-content">
 
+
+            <!-- ================================================== -->
+            <!-- MODAL HEADER -->
+            <!-- ================================================== -->
+
             <div class="modal-header">
 
                 <h5 class="modal-title">
 
                     <i class="bi bi-cash-coin me-2 text-primary"></i>
+
                     Tambah Kas Masuk
 
                 </h5>
+
 
                 <button
                     type="button"
@@ -212,38 +970,73 @@ Kas Masuk
 
             </div>
 
+
+            <!-- ================================================== -->
+            <!-- MODAL BODY -->
+            <!-- ================================================== -->
+
             <div class="modal-body">
+
+
+                <!-- ID TRANSAKSI -->
 
                 <input
                     type="hidden"
                     id="kas_id">
 
-                <!-- bulan & tahun tetap diisi otomatis oleh JS dari tanggal,
-                     tapi tidak ditampilkan sebagai kotak kosong -->
-                <input type="hidden" id="bulan">
-                <input type="hidden" id="tahun">
+
+                <!-- BULAN DAN TAHUN -->
+                <!-- DIISI OTOMATIS OLEH JAVASCRIPT DARI TANGGAL -->
+
+                <input
+                    type="hidden"
+                    id="bulan">
+
+                <input
+                    type="hidden"
+                    id="tahun">
+
 
                 <div class="row g-3">
 
+
+                    <!-- ================================================== -->
+                    <!-- CARI ANGGOTA -->
+                    <!-- ================================================== -->
+
                     <div class="col-12 col-md-6">
 
-                        <label class="form-label fw-semibold">Cari Anggota</label>
+                        <label class="form-label fw-semibold">
+
+                            Cari Anggota
+
+                        </label>
+
+
+                        <!-- ID ANGGOTA -->
 
                         <input
                             type="hidden"
                             id="anggota_id">
 
+
                         <div class="input-group">
 
+
                             <span class="input-group-text bg-white">
+
                                 <i class="bi bi-search"></i>
+
                             </span>
+
 
                             <input
                                 type="text"
                                 class="form-control"
                                 id="searchAnggota"
-                                placeholder="Ketik nama anggota...">
+                                placeholder="Ketik nama anggota..."
+                                autocomplete="off">
+
 
                             <button
                                 class="btn btn-outline-secondary"
@@ -254,12 +1047,24 @@ Kas Masuk
 
                             </button>
 
+
                         </div>
+
+
+                        <!-- ========================================== -->
+                        <!-- HASIL PENCARIAN ANGGOTA -->
+                        <!-- ========================================== -->
 
                         <div
                             id="hasilAnggota"
                             class="list-group mt-2 shadow-sm">
+
                         </div>
+
+
+                        <!-- ========================================== -->
+                        <!-- ANGGOTA YANG SUDAH DIPILIH -->
+                        <!-- ========================================== -->
 
                         <div
                             id="anggotaTerpilih"
@@ -267,91 +1072,150 @@ Kas Masuk
 
                             <div class="card-body py-2">
 
+
                                 <small class="text-muted">
+
                                     Anggota Terpilih
+
                                 </small>
+
 
                                 <h6
                                     id="namaTerpilih"
                                     class="mb-0">
+
                                 </h6>
+
 
                                 <small
                                     id="rtTerpilih"
                                     class="text-primary">
+
                                 </small>
+
 
                             </div>
 
                         </div>
 
+
                     </div>
+
+
+                    <!-- ================================================== -->
+                    <!-- TANGGAL -->
+                    <!-- ================================================== -->
 
                     <div class="col-12 col-md-6">
 
-                        <label class="form-label fw-semibold">Tanggal</label>
+                        <label class="form-label fw-semibold">
+
+                            Tanggal
+
+                        </label>
+
 
                         <input
                             type="date"
                             class="form-control"
                             id="tanggal">
 
-                        <div class="row g-3 mt-1">
+                                                </div>
 
-                            <div class="col-6">
 
-                                <label class="form-label fw-semibold">Nominal</label>
+                    <!-- ================================================== -->
+                    <!-- NOMINAL -->
+                    <!-- ================================================== -->
 
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        id="nominal"
-                                        value="3000">
-                                </div>
+                    <div class="col-12 col-md-4">
 
-                            </div>
+                        <label class="form-label fw-semibold">
+                            Nominal
+                        </label>
 
-                            <div class="col-6">
+                        <div class="input-group">
 
-                                <label class="form-label fw-semibold">Metode</label>
+                            <span class="input-group-text">
+                                Rp
+                            </span>
 
-                                <select
-                                    class="form-select"
-                                    id="metode">
-
-                                    <option value="Cash">Cash</option>
-                                    <option value="Transfer">Transfer</option>
-                                    <option value="QRIS">QRIS</option>
-
-                                </select>
-
-                            </div>
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="nominal"
+                                value="3000"
+                                min="1"
+                                placeholder="3000">
 
                         </div>
 
                     </div>
 
-                    <div class="col-12">
 
-                        <label class="form-label fw-semibold">Keterangan</label>
+                    <!-- ================================================== -->
+                    <!-- METODE PEMBAYARAN -->
+                    <!-- ================================================== -->
+
+                    <div class="col-12 col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Metode Pembayaran
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="metode">
+
+                            <option value="Cash">
+                                Cash
+                            </option>
+
+                            <option value="Transfer">
+                                Transfer
+                            </option>
+
+                            <option value="QRIS">
+                                QRIS
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ================================================== -->
+                    <!-- KETERANGAN -->
+                    <!-- ================================================== -->
+
+                    <div class="col-12 col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Keterangan
+                        </label>
 
                         <input
                             type="text"
                             class="form-control"
                             id="keterangan"
-                            placeholder="Contoh: Kas bulanan bulan Juli">
+                            value="Kas Bulanan"
+                            placeholder="Contoh: Kas Bulanan">
 
                     </div>
+
 
                 </div>
 
             </div>
 
+
+            <!-- ================================================== -->
+            <!-- MODAL FOOTER -->
+            <!-- ================================================== -->
+
             <div class="modal-footer">
 
                 <button
+                    type="button"
                     class="btn btn-secondary"
                     data-bs-dismiss="modal">
 
@@ -359,11 +1223,13 @@ Kas Masuk
 
                 </button>
 
+
                 <button
+                    type="button"
                     class="btn btn-primary"
                     onclick="simpanKasMasuk()">
 
-                    <i class="bi bi-check-circle me-2"></i>
+                    <i class="bi bi-check-circle me-1"></i>
 
                     Simpan
 
@@ -371,34 +1237,185 @@ Kas Masuk
 
             </div>
 
+
         </div>
 
     </div>
 
 </div>
 
+
 {% endblock %}
+
 
 {% block script %}
 
+<!-- ========================================================== -->
+<!-- JAVASCRIPT KAS MASUK -->
+<!-- ========================================================== -->
+
 <script src="/static/js/kas_masuk.js"></script>
+
 
 <script>
 
-document.getElementById("searchKasMasuk").addEventListener("keyup", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-    const keyword = this.value.toLowerCase();
 
-    const rows = document.querySelectorAll("#tbodyKasMasuk tr");
+    // ==========================================================
+    // PENCARIAN TABEL REKAP PEMBAYARAN
+    // ==========================================================
 
-    rows.forEach(function(row){
+    const searchRekap = document.getElementById("searchRekap");
+    const tbodyRekap = document.getElementById("tbodyRekap");
 
-        row.style.display =
-            row.innerText.toLowerCase().includes(keyword)
-            ? ""
-            : "none";
+
+    if (searchRekap && tbodyRekap) {
+
+        searchRekap.addEventListener("keyup", function () {
+
+            const keyword = this.value
+                .toLowerCase()
+                .trim();
+
+            const rows = tbodyRekap.querySelectorAll("tr");
+
+
+            rows.forEach(function (row) {
+
+                const text = row.innerText
+                    .toLowerCase();
+
+                if (text.includes(keyword)) {
+
+                    row.style.display = "";
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+    }
+
+
+    // ==========================================================
+    // PENCARIAN RIWAYAT TRANSAKSI
+    // ==========================================================
+
+    const searchRiwayat =
+        document.getElementById("searchRiwayat");
+
+    const tbodyRiwayat =
+        document.getElementById("tbodyRiwayat");
+
+
+    if (searchRiwayat && tbodyRiwayat) {
+
+        searchRiwayat.addEventListener("keyup", function () {
+
+            const keyword = this.value
+                .toLowerCase()
+                .trim();
+
+            const rows =
+                tbodyRiwayat.querySelectorAll("tr");
+
+
+            rows.forEach(function (row) {
+
+                const text = row.innerText
+                    .toLowerCase();
+
+                if (text.includes(keyword)) {
+
+                    row.style.display = "";
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+    }
+
+
+    // ==========================================================
+    // SIMPAN TAB AKTIF
+    // ==========================================================
+    //
+    // Contoh:
+    //
+    // User membuka Riwayat Transaksi.
+    // Kemudian refresh halaman.
+    // Tab Riwayat tetap dibuka.
+    //
+    // ==========================================================
+
+    const tabButtons =
+        document.querySelectorAll(
+            '#kasMasukTab button[data-bs-toggle="tab"]'
+        );
+
+
+    tabButtons.forEach(function (button) {
+
+        button.addEventListener(
+            "shown.bs.tab",
+            function (event) {
+
+                localStorage.setItem(
+                    "kasMasukActiveTab",
+                    event.target.getAttribute(
+                        "data-bs-target"
+                    )
+                );
+
+            }
+        );
 
     });
+
+
+    // ==========================================================
+    // KEMBALIKAN TAB TERAKHIR
+    // ==========================================================
+
+    const activeTab =
+        localStorage.getItem(
+            "kasMasukActiveTab"
+        );
+
+
+    if (activeTab) {
+
+        const trigger =
+            document.querySelector(
+                '#kasMasukTab button[data-bs-target="' +
+                activeTab +
+                '"]'
+            );
+
+
+        if (trigger) {
+
+            const tab =
+                new bootstrap.Tab(trigger);
+
+            tab.show();
+
+        }
+
+    }
+
 
 });
 

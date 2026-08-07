@@ -5,21 +5,356 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <title>Register - Sistem Informasi Karang Taruna Sendangan</title>
+    <title>
+        Register - Sistem Informasi Karang Taruna Sendangan
+    </title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+    <!-- Google Font -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
 
+        :root{
+            --forest-dark:#07231a;
+            --forest:#0e3d2c;
+            --forest-mid:#1c5c40;
+            --forest-light:#2e8058;
+            --gold:#d4af5a;
+            --gold-soft:#f0d99a;
+        }
+
+        *{box-sizing:border-box;}
+
         body{
 
-            background:linear-gradient(135deg,#198754,#0d6efd);
+            margin:0;
 
-            height:100vh;
+            min-height:100vh;
+
+            font-family:'Poppins',Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+
+            position:relative;
+
+            overflow-x:hidden;
+
+            background:linear-gradient(160deg,#031712 0%,#0b2f22 35%,#134432 65%,#07231a 100%);
+
+            background-size:200% 200%;
+
+            animation:skyShift 22s ease infinite;
+
+            color:#fff;
+
+        }
+
+        @keyframes skyShift{
+
+            0%{background-position:0% 0%;}
+            50%{background-position:100% 60%;}
+            100%{background-position:0% 0%;}
+
+        }
+
+        /* ---------- NAVBAR ---------- */
+
+        .navbar-custom{
+
+            position:relative;
+
+            z-index:5;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            padding:22px 40px;
+
+        }
+
+        .brand{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:10px;
+
+            font-weight:700;
+
+            font-size:20px;
+
+            letter-spacing:.5px;
+
+        }
+
+        .brand .bi{
+
+            color:var(--gold);
+
+            font-size:24px;
+
+        }
+
+        .nav-links{
+
+            display:flex;
+
+            gap:30px;
+
+            align-items:center;
+
+        }
+
+        .mini-flag{
+
+            width:26px;
+
+            height:17px;
+
+            border-radius:2px;
+
+            overflow:hidden;
+
+            position:relative;
+
+            display:inline-block;
+
+            animation:wave 2.3s ease-in-out infinite;
+
+            transform-origin:left center;
+
+            box-shadow:0 2px 6px rgba(0,0,0,.4);
+
+        }
+
+        .mini-flag .red{position:absolute;top:0;left:0;right:0;height:50%;background:#e2231a;}
+        .mini-flag .white{position:absolute;bottom:0;left:0;right:0;height:50%;background:#fff;}
+
+        @keyframes wave{
+
+            0%,100%{transform:perspective(100px) rotateY(0deg);}
+            50%{transform:perspective(100px) rotateY(10deg);}
+
+        }
+
+        /* ---------- STARFIELD ---------- */
+
+        .stars{
+
+            position:absolute;
+
+            inset:0;
+
+            overflow:hidden;
+
+            pointer-events:none;
+
+            z-index:0;
+
+        }
+
+        .star{
+
+            position:absolute;
+
+            width:2px;height:2px;
+
+            background:#fff;
+
+            border-radius:50%;
+
+            animation:twinkle 3s ease-in-out infinite;
+
+        }
+
+        @keyframes twinkle{
+
+            0%,100%{opacity:.15;}
+            50%{opacity:1;}
+
+        }
+
+        .shooting-star{
+
+            position:absolute;
+
+            width:2px;
+
+            height:2px;
+
+            background:linear-gradient(90deg,#fff,rgba(255,255,255,0));
+
+            border-radius:50%;
+
+            animation:shoot 6s linear infinite;
+
+            opacity:0;
+
+        }
+
+        .shooting-star::before{
+
+            content:"";
+
+            position:absolute;
+
+            top:50%;
+
+            right:0;
+
+            width:90px;
+
+            height:1.5px;
+
+            background:linear-gradient(270deg,rgba(255,255,255,.9),rgba(255,255,255,0));
+
+            transform:translateY(-50%);
+
+        }
+
+        @keyframes shoot{
+
+            0%{transform:translate(0,0);opacity:0;}
+            2%{opacity:1;}
+            18%{transform:translate(-420px,260px);opacity:0;}
+            100%{opacity:0;}
+
+        }
+
+        /* ---------- FIREFLIES ---------- */
+
+        .firefly{
+
+            position:absolute;
+
+            width:5px;height:5px;
+
+            border-radius:50%;
+
+            background:var(--gold-soft);
+
+            box-shadow:0 0 8px 3px rgba(240,217,154,.6);
+
+            animation:fly linear infinite;
+
+            pointer-events:none;
+
+            z-index:1;
+
+        }
+
+        @keyframes fly{
+
+            0%{transform:translate(0,0);opacity:0;}
+            10%{opacity:.9;}
+            50%{transform:translate(30px,-40px);}
+            90%{opacity:.7;}
+            100%{transform:translate(-20px,-90px);opacity:0;}
+
+        }
+
+        /* ---------- FALLING LEAVES ---------- */
+
+        .leaves{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;}
+
+        .leaf{
+
+            position:absolute;
+
+            top:-40px;
+
+            font-size:18px;
+
+            opacity:.7;
+
+            animation-name:fall,sway;
+
+            animation-timing-function:linear,ease-in-out;
+
+            animation-iteration-count:infinite,infinite;
+
+        }
+
+        @keyframes fall{
+
+            0%{transform:translateY(0) rotate(0deg);}
+            100%{transform:translateY(115vh) rotate(360deg);}
+
+        }
+
+        @keyframes sway{
+
+            0%,100%{margin-left:0;}
+            50%{margin-left:35px;}
+
+        }
+
+        /* ---------- KAMPUNG SILHOUETTE ---------- */
+
+        .skyline{
+
+            position:absolute;
+
+            bottom:0;
+
+            left:0;
+
+            width:100%;
+
+            z-index:2;
+
+            pointer-events:none;
+
+            line-height:0;
+
+        }
+
+        .skyline svg{
+
+            width:100%;
+
+            height:auto;
+
+            display:block;
+
+        }
+
+        .window-light{
+
+            animation:glow 4s ease-in-out infinite;
+
+        }
+
+        @keyframes glow{
+
+            0%,100%{opacity:.25;}
+            50%{opacity:.95;}
+
+        }
+
+        /* ---------- REGISTER CARD ---------- */
+
+        .center-wrap{
+
+            position:relative;
+
+            z-index:4;
 
             display:flex;
 
@@ -27,19 +362,40 @@
 
             align-items:center;
 
-            font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+            padding:20px 20px 120px;
 
         }
 
         .register-card{
 
-            width:450px;
+            width:100%;
 
-            border:none;
+            max-width:600px;
 
-            border-radius:18px;
+            border-radius:20px;
 
-            box-shadow:0 20px 40px rgba(0,0,0,.15);
+            padding:38px 40px 32px;
+
+            background:rgba(20,50,38,.45);
+
+            backdrop-filter:blur(18px) saturate(140%);
+
+            -webkit-backdrop-filter:blur(18px) saturate(140%);
+
+            border:1px solid rgba(212,175,90,.25);
+
+            box-shadow:0 25px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05);
+
+            position:relative;
+
+            animation:cardIn .6s ease;
+
+        }
+
+        @keyframes cardIn{
+
+            from{opacity:0;transform:translateY(24px);}
+            to{opacity:1;transform:translateY(0);}
 
         }
 
@@ -47,15 +403,225 @@
 
             text-align:center;
 
-            margin-bottom:25px;
+            margin-bottom:22px;
 
         }
 
         .register-header i{
 
-            font-size:60px;
+            font-size:44px;
 
-            color:#198754;
+            color:var(--gold);
+
+            text-shadow:0 0 24px rgba(212,175,90,.3);
+
+        }
+
+        .register-header h3{
+
+            font-weight:600;
+
+            margin:10px 0 2px;
+
+            color:#fff;
+
+        }
+
+        .register-header p{
+
+            color:rgba(255,255,255,.6);
+
+            font-size:13px;
+
+            margin:0;
+
+        }
+
+        .section-title{
+
+            font-size:12.5px;
+
+            font-weight:700;
+
+            color:var(--gold-soft);
+
+            text-transform:uppercase;
+
+            letter-spacing:.8px;
+
+            margin-bottom:15px;
+
+            display:flex;
+
+            align-items:center;
+
+            gap:6px;
+
+        }
+
+        .divider-line{
+
+            border:none;
+
+            border-top:1px solid rgba(255,255,255,.12);
+
+            margin:28px 0;
+
+        }
+
+        .form-label{
+
+            color:rgba(255,255,255,.8);
+
+            font-size:13.5px;
+
+            font-weight:500;
+
+        }
+
+        .glass-input{
+
+            width:100%;
+
+            padding:11px 14px;
+
+            border-radius:10px;
+
+            border:1px solid rgba(255,255,255,.15);
+
+            background:rgba(255,255,255,.06);
+
+            color:#fff;
+
+            font-size:14px;
+
+            outline:none;
+
+            transition:.2s;
+
+        }
+
+        textarea.glass-input{
+
+            resize:none;
+
+        }
+
+        .glass-input::placeholder{
+
+            color:rgba(255,255,255,.4);
+
+        }
+
+        .glass-input:focus{
+
+            border-color:var(--gold);
+
+            background:rgba(255,255,255,.1);
+
+            box-shadow:0 0 0 3px rgba(212,175,90,.15);
+
+        }
+
+        select.glass-input option{
+
+            background:#0e3d2c;
+
+            color:#fff;
+
+        }
+
+        .form-text{
+
+            color:rgba(255,255,255,.45);
+
+            font-size:12px;
+
+        }
+
+        .password-wrap{
+
+            position:relative;
+
+        }
+
+        .toggle-eye{
+
+            position:absolute;
+
+            right:8px;
+
+            top:50%;
+
+            transform:translateY(-50%);
+
+            width:26px;
+
+            height:26px;
+
+            padding:0;
+
+            margin:0;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            background:none;
+
+            border:none;
+
+            line-height:1;
+
+            color:rgba(255,255,255,.5);
+
+            cursor:pointer;
+
+            font-size:15px;
+
+        }
+
+        .toggle-eye i{
+
+            display:block;
+
+            line-height:1;
+
+        }
+
+        .toggle-eye:hover{color:#fff;}
+
+        .info-note{
+
+            display:flex;
+
+            gap:8px;
+
+            align-items:flex-start;
+
+            background:rgba(255,255,255,.06);
+
+            border:1px solid rgba(255,255,255,.12);
+
+            border-radius:10px;
+
+            padding:12px 14px;
+
+            font-size:12.5px;
+
+            color:rgba(255,255,255,.65);
+
+            margin-bottom:22px;
+
+        }
+
+        .info-note i{
+
+            color:var(--gold-soft);
+
+            margin-top:1px;
 
         }
 
@@ -63,9 +629,73 @@
 
             width:100%;
 
+            border:none;
+
             padding:12px;
 
-            font-weight:bold;
+            border-radius:10px;
+
+            font-weight:600;
+
+            font-size:14.5px;
+
+            color:#08231a;
+
+            background:linear-gradient(90deg,var(--gold-soft),var(--gold));
+
+            transition:transform .15s ease, box-shadow .15s ease;
+
+        }
+
+        .btn-register:hover{
+
+            transform:translateY(-2px);
+
+            box-shadow:0 10px 24px rgba(212,175,90,.35);
+
+            color:#08231a;
+
+        }
+
+        .login-link{
+
+            text-align:center;
+
+            font-size:13px;
+
+            color:rgba(255,255,255,.6);
+
+        }
+
+        .login-link a{
+
+            color:var(--gold-soft);
+
+            font-weight:600;
+
+            text-decoration:none;
+
+        }
+
+        .alert-danger{
+
+            font-size:13px;
+
+            padding:10px 14px;
+
+            border-radius:10px;
+
+            background:rgba(220,53,69,.18);
+
+            border:1px solid rgba(220,53,69,.4);
+
+            color:#ffd6da;
+
+        }
+
+        @media (max-width:576px){
+
+            .register-card{padding:30px 24px 26px;}
 
         }
 
@@ -75,31 +705,131 @@
 
 <body>
 
-<div class="card register-card">
+<!-- STARFIELD + SHOOTING STARS -->
 
-    <div class="card-body p-5">
+<div class="stars" id="stars"></div>
+
+<!-- FIREFLIES -->
+
+<div class="leaves" id="fireflies"></div>
+
+<!-- FALLING LEAVES -->
+
+<div class="leaves" id="leaves"></div>
+
+<!-- KAMPUNG SILHOUETTE -->
+
+<div class="skyline">
+
+    <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+
+        <g fill="#0a2e21" opacity="0.9">
+            <circle cx="60" cy="150" r="40"/>
+            <rect x="55" y="150" width="10" height="40"/>
+            <circle cx="180" cy="140" r="46"/>
+            <rect x="174" y="140" width="12" height="50"/>
+            <circle cx="1300" cy="145" r="42"/>
+            <rect x="1294" y="145" width="12" height="45"/>
+            <circle cx="1400" cy="135" r="48"/>
+            <rect x="1394" y="135" width="12" height="55"/>
+        </g>
+
+        <g fill="#082019">
+
+            <rect x="230" y="120" width="120" height="100"/>
+            <polygon points="220,120 290,80 360,120"/>
+            <rect x="300" y="150" width="18" height="24" class="window-light" fill="#f0d99a"/>
+            <rect x="260" y="150" width="18" height="24" class="window-light" fill="#f0d99a" style="animation-delay:1s"/>
+
+            <rect x="400" y="100" width="140" height="120"/>
+            <polygon points="390,100 470,55 550,100"/>
+            <rect x="430" y="140" width="20" height="26" class="window-light" fill="#f0d99a" style="animation-delay:2s"/>
+            <rect x="480" y="140" width="20" height="26" class="window-light" fill="#f0d99a" style="animation-delay:.5s"/>
+
+            <rect x="580" y="130" width="110" height="90"/>
+            <polygon points="572,130 635,95 698,130"/>
+            <rect x="615" y="155" width="16" height="22" class="window-light" fill="#f0d99a" style="animation-delay:1.5s"/>
+
+            <rect x="750" y="110" width="130" height="110"/>
+            <polygon points="742,110 815,68 888,110"/>
+            <rect x="780" y="145" width="18" height="24" class="window-light" fill="#f0d99a" style="animation-delay:2.5s"/>
+            <rect x="825" y="145" width="18" height="24" class="window-light" fill="#f0d99a" style="animation-delay:.8s"/>
+
+            <rect x="930" y="125" width="110" height="95"/>
+            <polygon points="922,125 985,90 1048,125"/>
+            <rect x="965" y="150" width="16" height="22" class="window-light" fill="#f0d99a" style="animation-delay:1.8s"/>
+
+            <rect x="1080" y="105" width="140" height="115"/>
+            <polygon points="1072,105 1150,60 1228,105"/>
+            <rect x="1110" y="140" width="18" height="24" class="window-light" fill="#f0d99a" style="animation-delay:.3s"/>
+            <rect x="1160" y="140" width="18" height="24" class="window-light" fill="#f0d99a" style="animation-delay:2.2s"/>
+
+        </g>
+
+        <g fill="#051911">
+            <circle cx="130" cy="180" r="34"/>
+            <rect x="125" y="180" width="10" height="35"/>
+            <circle cx="720" cy="185" r="30"/>
+            <rect x="715" y="185" width="10" height="32"/>
+            <circle cx="1000" cy="180" r="36"/>
+            <rect x="995" y="180" width="10" height="36"/>
+        </g>
+
+        <rect x="0" y="205" width="1440" height="15" fill="#04140e"/>
+
+    </svg>
+
+</div>
+
+<!-- NAVBAR -->
+
+<nav class="navbar-custom">
+
+    <div class="brand">
+
+        <i class="bi bi-tree-fill"></i>
+
+        Karang Taruna Sendangan
+
+    </div>
+
+    <div class="nav-links">
+
+        <span class="mini-flag" title="Indonesia">
+
+            <span class="red"></span>
+            <span class="white"></span>
+
+        </span>
+
+    </div>
+
+</nav>
+
+<!-- REGISTER CARD -->
+
+<div class="center-wrap">
+
+    <div class="register-card">
 
         <div class="register-header">
 
             <i class="bi bi-person-plus-fill"></i>
 
-            <h3 class="mt-3">
+            <h3>Registrasi Akun</h3>
 
-                Registrasi Akun
-
-            </h3>
-
-            <p class="text-muted">
-
-                Sistem Informasi Karang Taruna Sendangan
-
-            </p>
+            <p>Sistem Informasi Karang Taruna Sendangan</p>
 
         </div>
 
+
+        <!-- ERROR -->
+
         {% if error %}
 
-        <div class="alert alert-danger">
+        <div class="alert-danger mb-3">
+
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
 
             {{ error }}
 
@@ -107,77 +837,220 @@
 
         {% endif %}
 
+
+        <!-- FORM REGISTER -->
+
         <form method="POST" action="/register">
 
+            <!-- DATA ANGGOTA -->
+
+            <div class="section-title">
+
+                <i class="bi bi-person-vcard"></i>
+
+                Data Anggota
+
+            </div>
+
+
+            <!-- NAMA LENGKAP -->
+
             <div class="mb-3">
 
-                <label class="form-label">
-
-                    Nama Lengkap
-
-                </label>
+                <label for="nama" class="form-label">Nama Lengkap</label>
 
                 <input
                     type="text"
+                    id="nama"
                     name="nama"
-                    class="form-control"
+                    class="glass-input"
+                    placeholder="Masukkan nama lengkap"
+                    autocomplete="name"
                     required>
 
             </div>
 
+
+            <!-- RT -->
+
             <div class="mb-3">
 
-                <label class="form-label">
+                <label for="rt" class="form-label">RT</label>
 
-                    Username
+                <select id="rt" name="rt" class="glass-input" required>
 
-                </label>
+                    <option value="" selected disabled>Pilih RT</option>
+
+                    <option value="01">RT 01</option>
+                    <option value="02">RT 02</option>
+                    <option value="03">RT 03</option>
+                    <option value="04">RT 04</option>
+                    <option value="05">RT 05</option>
+                    <option value="06">RT 06</option>
+
+                </select>
+
+            </div>
+
+
+            <!-- NOMOR HP -->
+
+            <div class="mb-3">
+
+                <label for="no_hp" class="form-label">No. HP</label>
+
+                <input
+                    type="tel"
+                    id="no_hp"
+                    name="no_hp"
+                    class="glass-input"
+                    placeholder="Contoh: 081234567890"
+                    autocomplete="tel"
+                    required>
+
+            </div>
+
+
+            <!-- ALAMAT -->
+
+            <div class="mb-2">
+
+                <label for="alamat" class="form-label">Alamat</label>
+
+                <textarea
+                    id="alamat"
+                    name="alamat"
+                    class="glass-input"
+                    rows="3"
+                    placeholder="Masukkan alamat lengkap"
+                    autocomplete="street-address"
+                    required></textarea>
+
+            </div>
+
+
+            <hr class="divider-line">
+
+
+            <!-- DATA LOGIN -->
+
+            <div class="section-title">
+
+                <i class="bi bi-shield-lock"></i>
+
+                Data Login
+
+            </div>
+
+
+            <!-- USERNAME -->
+
+            <div class="mb-3">
+
+                <label for="username" class="form-label">Username</label>
 
                 <input
                     type="text"
+                    id="username"
                     name="username"
-                    class="form-control"
+                    class="glass-input"
+                    placeholder="Buat username"
+                    autocomplete="username"
                     required>
 
             </div>
+
+
+            <!-- PASSWORD -->
 
             <div class="mb-3">
 
-                <label class="form-label">
+                <label for="password" class="form-label">Password</label>
 
-                    Password
+                <div class="password-wrap">
 
-                </label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="glass-input"
+                        style="padding-right:40px"
+                        placeholder="Minimal 6 karakter"
+                        autocomplete="new-password"
+                        minlength="6"
+                        required>
 
-                <input
-                    type="password"
-                    name="password"
-                    class="form-control"
-                    required>
+                    <button
+                        type="button"
+                        class="toggle-eye"
+                        id="buttonPassword"
+                        aria-label="Tampilkan password"
+                        onclick="togglePassword('password','iconPassword','buttonPassword')">
+
+                        <i class="bi bi-eye" id="iconPassword"></i>
+
+                    </button>
+
+                </div>
+
+                <div class="form-text mt-1">
+
+                    Password minimal 6 karakter.
+
+                </div>
 
             </div>
+
+
+            <!-- KONFIRMASI PASSWORD -->
 
             <div class="mb-4">
 
-                <label class="form-label">
+                <label for="confirm_password" class="form-label">Konfirmasi Password</label>
 
-                    Konfirmasi Password
+                <div class="password-wrap">
 
-                </label>
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        class="glass-input"
+                        style="padding-right:40px"
+                        placeholder="Masukkan kembali password"
+                        autocomplete="new-password"
+                        minlength="6"
+                        required>
 
-                <input
-                    type="password"
-                    name="confirm_password"
-                    class="form-control"
-                    required>
+                    <button
+                        type="button"
+                        class="toggle-eye"
+                        id="buttonConfirmPassword"
+                        aria-label="Tampilkan konfirmasi password"
+                        onclick="togglePassword('confirm_password','iconConfirmPassword','buttonConfirmPassword')">
+
+                        <i class="bi bi-eye" id="iconConfirmPassword"></i>
+
+                    </button>
+
+                </div>
 
             </div>
 
-            <button
-                type="submit"
-                class="btn btn-success btn-register">
 
-                <i class="bi bi-person-check-fill me-2"></i>
+            <!-- INFORMASI -->
+
+            <div class="info-note">
+
+                <i class="bi bi-info-circle-fill"></i>
+
+                <span>Setelah registrasi berhasil, akun Anda akan otomatis terhubung dengan data anggota.</span>
+
+            </div>
+
+
+            <!-- BUTTON REGISTER -->
+
+            <button type="submit" class="btn-register">
 
                 Daftar
 
@@ -185,17 +1058,14 @@
 
         </form>
 
-        <hr>
 
-        <div class="text-center">
+        <!-- LOGIN -->
 
-            Sudah punya akun?
+        <hr class="divider-line" style="margin:24px 0 18px">
 
-            <a href="/login">
+        <div class="login-link">
 
-                Login di sini
-
-            </a>
+            Sudah punya akun? <a href="/login">Login di sini</a>
 
         </div>
 
@@ -203,6 +1073,151 @@
 
 </div>
 
-</body>
 
+<!-- Bootstrap JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- SHOW / HIDE PASSWORD -->
+
+<script>
+
+function togglePassword(inputId, iconId, buttonId){
+
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    const button = document.getElementById(buttonId);
+
+    if(input.type === "password"){
+
+        input.type = "text";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+        button.setAttribute("aria-label","Sembunyikan password");
+
+    }else{
+
+        input.type = "password";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+        button.setAttribute("aria-label","Tampilkan password");
+
+    }
+
+}
+
+</script>
+
+<!-- STARS GENERATOR -->
+
+<script>
+
+(function(){
+
+    const starsBox = document.getElementById("stars");
+
+    for(let i=0;i<80;i++){
+
+        const s = document.createElement("div");
+
+        s.className = "star";
+
+        s.style.top = Math.random()*70+"%";
+        s.style.left = Math.random()*100+"%";
+
+        s.style.animationDuration = (Math.random()*3+2)+"s";
+        s.style.animationDelay = (Math.random()*4)+"s";
+
+        starsBox.appendChild(s);
+
+    }
+
+    for(let i=0;i<4;i++){
+
+        const sh = document.createElement("div");
+
+        sh.className = "shooting-star";
+
+        sh.style.top = (Math.random()*30+5)+"%";
+        sh.style.left = (Math.random()*50+40)+"%";
+
+        sh.style.animationDuration = (Math.random()*4+5)+"s";
+        sh.style.animationDelay = (Math.random()*8)+"s";
+
+        starsBox.appendChild(sh);
+
+    }
+
+})();
+
+</script>
+
+<!-- FIREFLIES GENERATOR -->
+
+<script>
+
+(function(){
+
+    const box = document.getElementById("fireflies");
+
+    for(let i=0;i<14;i++){
+
+        const f = document.createElement("div");
+
+        f.className = "firefly";
+
+        f.style.left = Math.random()*100+"vw";
+        f.style.top = (Math.random()*30+55)+"vh";
+
+        f.style.animationDuration = (Math.random()*6+6)+"s";
+        f.style.animationDelay = (Math.random()*6)+"s";
+
+        box.appendChild(f);
+
+    }
+
+})();
+
+</script>
+
+<!-- FALLING LEAVES GENERATOR -->
+
+<script>
+
+(function(){
+
+    const container = document.getElementById("leaves");
+
+    const emojis = ["🍃","🍂","🌿"];
+
+    const count = 12;
+
+    for(let i=0;i<count;i++){
+
+        const leaf = document.createElement("div");
+
+        leaf.className = "leaf";
+
+        leaf.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+
+        leaf.style.left = Math.random()*100+"vw";
+
+        const fallDuration = Math.random()*10+12;
+        const swayDuration = Math.random()*3+2;
+
+        leaf.style.animationDuration = fallDuration+"s, "+swayDuration+"s";
+        leaf.style.animationDelay = (Math.random()*fallDuration)+"s, 0s";
+
+        leaf.style.fontSize = (Math.random()*8+14)+"px";
+
+        container.appendChild(leaf);
+
+    }
+
+})();
+
+</script>
+
+</body>
 </html>

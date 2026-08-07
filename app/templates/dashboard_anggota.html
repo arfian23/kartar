@@ -1,0 +1,919 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard Anggota
+{% endblock %}
+
+
+{% block content %}
+
+<div class="fade-in">
+
+
+    <!-- ====================================================== -->
+    <!-- HEADER -->
+    <!-- ====================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+        <div>
+
+            <h2 class="page-title mb-1">
+                Dashboard
+            </h2>
+
+
+            {% if anggota %}
+
+            <p class="text-muted mb-1">
+
+                Selamat datang,
+
+                <strong>
+                    {{ anggota.nama }}
+                </strong>
+
+            </p>
+
+
+            <small class="text-muted">
+
+                <i class="bi bi-geo-alt me-1"></i>
+
+                {{ anggota.rt }}
+
+            </small>
+
+
+            {% else %}
+
+            <p class="text-muted mb-0">
+
+                Selamat datang di Sistem Informasi
+                Karang Taruna Sendangan.
+
+            </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <div>
+
+            <span class="badge bg-primary px-3 py-2">
+
+                <i class="bi bi-person-fill me-1"></i>
+
+                Anggota
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- AKUN BELUM TERHUBUNG -->
+    <!-- ====================================================== -->
+
+    {% if belum_terhubung %}
+
+
+    <div class="alert alert-warning">
+
+        <div class="d-flex align-items-start">
+
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+
+
+            <div>
+
+                <h5 class="alert-heading mb-1">
+
+                    Akun Belum Terhubung
+
+                </h5>
+
+
+                <p class="mb-0">
+
+                    Akun Anda belum terhubung dengan data anggota.
+                    Silakan hubungi Ketua atau Wakil untuk
+                    menghubungkan akun dengan data anggota Anda.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- ====================================================== -->
+    <!-- CARD STATISTIK -->
+    <!-- ====================================================== -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- ================================================== -->
+        <!-- KAS BULAN INI -->
+        <!-- ================================================== -->
+
+        <div class="col-12 col-md-6 col-xl-4">
+
+
+            <div class="dashboard-card bg-success-soft h-100">
+
+
+                <div class="d-flex justify-content-between align-items-start">
+
+
+                    <div>
+
+
+                        <h6 class="mb-1">
+
+                            Kas Bulan Ini
+
+                        </h6>
+
+
+                        <small class="text-muted">
+
+                            {{ nama_bulan_sekarang }}
+                            {{ tahun_saat_ini }}
+
+                        </small>
+
+
+                        <div class="mt-3">
+
+
+                            {% if status_bulan_ini == "Lunas" %}
+
+
+                            <h3 class="text-success fw-bold mb-1">
+
+                                <i class="bi bi-check-circle-fill me-1"></i>
+
+                                Lunas
+
+                            </h3>
+
+
+                            <div class="text-success fw-semibold">
+
+                                Rp {{ "{:,.0f}".format(total_bulan_ini).replace(",", ".") }}
+
+                            </div>
+
+
+                            {% else %}
+
+
+                            <h3 class="text-danger fw-bold mb-1">
+
+                                <i class="bi bi-x-circle-fill me-1"></i>
+
+                                Belum Bayar
+
+                            </h3>
+
+
+                            <small class="text-muted">
+
+                                Belum ada pembayaran bulan ini.
+
+                            </small>
+
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <i class="bi bi-calendar-check fs-2"></i>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================================================== -->
+        <!-- TOTAL KAS TAHUN INI -->
+        <!-- ================================================== -->
+
+        <div class="col-12 col-md-6 col-xl-4">
+
+
+            <div class="dashboard-card bg-primary-soft h-100">
+
+
+                <div class="d-flex justify-content-between align-items-start">
+
+
+                    <div>
+
+
+                        <h6 class="mb-1">
+
+                            Total Kas Tahun Ini
+
+                        </h6>
+
+
+                        <small class="text-muted">
+
+                            {{ tahun_saat_ini }}
+
+                        </small>
+
+
+                        <h3 class="text-primary fw-bold mt-3 mb-1">
+
+                            Rp {{ "{:,.0f}".format(total_tahun_ini).replace(",", ".") }}
+
+                        </h3>
+
+
+                        <small class="text-muted">
+
+                            {{ jumlah_bulan_lunas_tahun_ini }}
+                            bulan tercatat membayar
+
+                        </small>
+
+
+                    </div>
+
+
+                    <i class="bi bi-wallet2 fs-2"></i>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================================================== -->
+        <!-- AGENDA MENDATANG -->
+        <!-- ================================================== -->
+
+        <div class="col-12 col-md-6 col-xl-4">
+
+
+            <div class="dashboard-card bg-warning-soft h-100">
+
+
+                <div class="d-flex justify-content-between align-items-start">
+
+
+                    <div>
+
+
+                        <h6 class="mb-1">
+
+                            Agenda Mendatang
+
+                        </h6>
+
+
+                        <small class="text-muted">
+
+                            Kegiatan Karang Taruna
+
+                        </small>
+
+
+                        <h3 class="fw-bold mt-3 mb-1">
+
+                            {{ jumlah_agenda }} Agenda
+
+                        </h3>
+
+
+                        <small class="text-muted">
+
+                            Agenda yang akan datang.
+
+                        </small>
+
+
+                    </div>
+
+
+                    <i class="bi bi-calendar-event fs-2"></i>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STATUS KAS SAYA -->
+    <!-- ====================================================== -->
+
+    <div class="card mb-4">
+
+
+        <!-- ================================================== -->
+        <!-- HEADER STATUS KAS -->
+        <!-- ================================================== -->
+
+        <div class="card-header bg-white">
+
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+
+                <!-- ========================================== -->
+                <!-- JUDUL -->
+                <!-- ========================================== -->
+
+                <div>
+
+
+                    <h5 class="fw-bold mb-1">
+
+                        <i class="bi bi-calendar-check text-primary me-2"></i>
+
+                        Status Kas Saya
+
+                    </h5>
+
+
+                    <small class="text-muted">
+
+                        Riwayat pembayaran kas tahun
+                        {{ tahun_filter }}
+
+                    </small>
+
+
+                </div>
+
+
+                <!-- ========================================== -->
+                <!-- FILTER -->
+                <!-- ========================================== -->
+
+                <div class="d-flex align-items-center flex-wrap gap-2">
+
+
+                    <span class="badge bg-primary">
+
+                        {{ jumlah_bulan_lunas_filter }}
+                        Bulan Lunas
+
+                    </span>
+
+
+                    <form
+                        method="GET"
+                        action="/"
+                        class="d-flex align-items-center gap-2">
+
+
+                        <label
+                            for="tahun"
+                            class="small fw-semibold mb-0">
+
+                            Tahun
+
+                        </label>
+
+
+                        <select
+                            name="tahun"
+                            id="tahun"
+                            class="form-select form-select-sm"
+                            style="width: 110px;"
+                            onchange="this.form.submit()">
+
+
+                            {% for item_tahun in daftar_tahun %}
+
+
+                            <option
+                                value="{{ item_tahun }}"
+                                {% if item_tahun == tahun_filter %}selected{% endif %}>
+
+                                {{ item_tahun }}
+
+                            </option>
+
+
+                            {% endfor %}
+
+
+                        </select>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================================================== -->
+        <!-- BODY STATUS KAS -->
+        <!-- ================================================== -->
+
+        <div class="card-body">
+
+
+            <div class="row g-3">
+
+
+                {% for item in rekap_bulanan %}
+
+
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+
+
+                    <div class="border rounded-3 p-3 text-center h-100">
+
+
+                        <!-- BULAN -->
+
+                        <div class="fw-semibold mb-2">
+
+                            {{ item.nama }}
+
+                        </div>
+
+
+                        <!-- ================================== -->
+                        <!-- LUNAS -->
+                        <!-- ================================== -->
+
+                        {% if item.status == "lunas" %}
+
+
+                        <div class="text-success">
+
+
+                            <i class="bi bi-check-circle-fill fs-4"></i>
+
+
+                            <div class="fw-bold mt-1">
+
+                                Rp {{ "{:,.0f}".format(item.total).replace(",", ".") }}
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- ================================== -->
+                        <!-- BELUM JATUH TEMPO -->
+                        <!-- ================================== -->
+
+                        {% elif item.status == "belum_jatuh_tempo" %}
+
+
+                        <div class="text-muted">
+
+
+                            <i class="bi bi-clock fs-4"></i>
+
+
+                            <div class="small mt-1">
+
+                                Belum Jatuh Tempo
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- ================================== -->
+                        <!-- BELUM BAYAR -->
+                        <!-- ================================== -->
+
+                        {% else %}
+
+
+                        <div class="text-danger">
+
+
+                            <i class="bi bi-x-circle-fill fs-4"></i>
+
+
+                            <div class="small fw-semibold mt-1">
+
+                                Belum Bayar
+
+                            </div>
+
+
+                        </div>
+
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- BAGIAN BAWAH -->
+    <!-- ====================================================== -->
+
+    <div class="row g-4">
+
+
+        <!-- ================================================== -->
+        <!-- RIWAYAT PEMBAYARAN -->
+        <!-- ================================================== -->
+
+        <div class="col-12 col-xl-7">
+
+
+            <div class="card h-100">
+
+
+                <div class="card-header bg-white">
+
+
+                    <h5 class="fw-bold mb-1">
+
+                        <i class="bi bi-clock-history text-success me-2"></i>
+
+                        Riwayat Pembayaran Terbaru
+
+                    </h5>
+
+
+                    <small class="text-muted">
+
+                        5 pembayaran terakhir Anda.
+
+                    </small>
+
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <div class="table-responsive">
+
+
+                        <table class="table table-hover align-middle">
+
+
+                            <thead>
+
+
+                                <tr>
+
+                                    <th>
+                                        Tanggal
+                                    </th>
+
+                                    <th>
+                                        Bulan
+                                    </th>
+
+                                    <th>
+                                        Nominal
+                                    </th>
+
+                                    <th>
+                                        Metode
+                                    </th>
+
+                                </tr>
+
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                                {% for pembayaran in riwayat_pembayaran %}
+
+
+                                <tr>
+
+
+                                    <td>
+
+                                        {{ pembayaran.tanggal.strftime("%d-%m-%Y") }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ pembayaran.bulan }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong class="text-success">
+
+                                            Rp {{ "{:,.0f}".format(pembayaran.nominal).replace(",", ".") }}
+
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+
+
+                                        {% if pembayaran.metode == "Cash" %}
+
+
+                                        <span class="badge bg-success">
+
+                                            Cash
+
+                                        </span>
+
+
+                                        {% elif pembayaran.metode == "Transfer" %}
+
+
+                                        <span class="badge bg-primary">
+
+                                            Transfer
+
+                                        </span>
+
+
+                                        {% elif pembayaran.metode == "QRIS" %}
+
+
+                                        <span class="badge bg-warning text-dark">
+
+                                            QRIS
+
+                                        </span>
+
+
+                                        {% else %}
+
+
+                                        <span class="badge bg-secondary">
+
+                                            {{ pembayaran.metode }}
+
+                                        </span>
+
+
+                                        {% endif %}
+
+
+                                    </td>
+
+
+                                </tr>
+
+
+                                {% else %}
+
+
+                                <tr>
+
+
+                                    <td
+                                        colspan="4"
+                                        class="text-center text-muted py-5">
+
+
+                                        <i class="bi bi-receipt fs-2 d-block mb-2"></i>
+
+
+                                        Belum ada riwayat pembayaran.
+
+
+                                    </td>
+
+
+                                </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================================================== -->
+        <!-- AGENDA TERDEKAT -->
+        <!-- ================================================== -->
+
+        <div class="col-12 col-xl-5">
+
+
+            <div class="card h-100">
+
+
+                <div class="card-header bg-white">
+
+
+                    <h5 class="fw-bold mb-1">
+
+                        <i class="bi bi-calendar-event text-warning me-2"></i>
+
+                        Agenda Terdekat
+
+                    </h5>
+
+
+                    <small class="text-muted">
+
+                        Kegiatan Karang Taruna yang akan datang.
+
+                    </small>
+
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    {% for agenda in agenda_mendatang %}
+
+
+                    <div
+                        class="{% if not loop.last %}border-bottom pb-3 mb-3{% endif %}">
+
+
+                        <!-- TANGGAL DAN WAKTU -->
+
+                        <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+
+
+                            <span class="badge bg-primary">
+
+                                {{ agenda.tanggal.strftime("%d-%m-%Y") }}
+
+                            </span>
+
+
+                            <small class="text-muted">
+
+                                <i class="bi bi-clock me-1"></i>
+
+                                {{ agenda.waktu.strftime("%H:%M") }}
+
+                            </small>
+
+
+                        </div>
+
+
+                        <!-- JUDUL -->
+
+                        <h6 class="fw-bold mb-2">
+
+                            {{ agenda.judul }}
+
+                        </h6>
+
+
+                        <!-- LOKASI -->
+
+                        <div class="small text-muted mb-2">
+
+                            <i class="bi bi-geo-alt me-1"></i>
+
+                            {{ agenda.lokasi }}
+
+                        </div>
+
+
+                        <!-- DESKRIPSI -->
+
+                        {% if agenda.deskripsi %}
+
+
+                        <p class="small text-muted mb-0">
+
+                            {{ agenda.deskripsi }}
+
+                        </p>
+
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    {% else %}
+
+
+                    <div class="text-center text-muted py-5">
+
+
+                        <i class="bi bi-calendar-x fs-2 d-block mb-2"></i>
+
+
+                        Belum ada agenda mendatang.
+
+
+                    </div>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}
